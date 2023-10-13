@@ -32,7 +32,7 @@ passos_max = 4
 dim_persona = (0, 0)
 altura_persona = 0
 
-for i in range(1,8):
+for i in range(1,10):
     if DEBUG: print( f"ator_{i}.png" )
     aux_img = pygame.image.load( dir + f"ator_{i}.png" )
     altura_persona = aux_img.get_height()

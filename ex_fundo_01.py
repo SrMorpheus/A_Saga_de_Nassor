@@ -231,11 +231,13 @@ while run:
       velocidade_y = -altura_pulo  # Inicie o pulo com uma velocidade negativa
       posicao_y += velocidade_y
       velocidade_y += gravidade
+      id_ator = 8
       pos_ator=( pos_ator[0], posicao_y)
     else:
       # Se a tecla de espaço não estiver pressionada, interrompa o pulo
       pulando = False
       posicao_y = 232
+      id_ator = 0
       pos_ator=( pos_ator[0], posicao_y)
 
       #testeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
@@ -259,6 +261,12 @@ while run:
         if event.key == pygame.K_ESCAPE:
             time.sleep(1);
             pygame.quit(); sys.exit();
+        
+        if event.key == pygame.K_RETURN:
+            print("Atacandooo")
+
+            id_ator = 7
+            pos_ator=( pos_ator[0], pos_ator[1])
 
         if event.key == pygame.K_SPACE:
             if not pulando:
@@ -267,12 +275,14 @@ while run:
              velocidade_y = -altura_pulo  # Inicie o pulo com uma velocidade negativa
              posicao_y += velocidade_y
              velocidade_y += gravidade
+             id_ator = 8
              pos_ator=( pos_ator[0], posicao_y)
-        else:
-          # Se a tecla de espaço não estiver pressionada, interrompa o pulo
-          pulando = False
-          posicao_y = 232
-          pos_ator=( pos_ator[0], posicao_y)
+            else:
+            # Se a tecla de espaço não estiver pressionada, interrompa o pulo
+             pulando = False
+             posicao_y = 232
+             id_ator = 0
+             pos_ator=( pos_ator[0], posicao_y)
         if event.key == pygame.K_LEFT:
              
              direcao = 'esquerda'
@@ -283,8 +293,6 @@ while run:
             direcao = 'direita'
             id_ator = id_ator + 1
             print("INDOOooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooO")
-      
-          
 
     if event.type ==pygame.KEYUP:
         if event.key == pygame.K_DOWN:
@@ -303,9 +311,13 @@ while run:
 
   print( 'ID', id_ator )
  
-
-  if id_ator > 6 : id_ator = 0
+  if id_ator > 8: id_ator = 0 #mexe aqui qualquer para outras versoes +
+  if id_ator == 6 : id_ator = 0 #mexe aqui qualquer coisa sobre ataque
   if id_ator < 0 : id_ator = 6
+  
+ 
+ 
+  
 #print( 'ID', id_ator )
   
 
