@@ -27,6 +27,7 @@ import time
 import pygame
 import math
 from personagem import *
+from inimigos import *
 #from terreno import * 
 
 pygame.init()
@@ -120,7 +121,11 @@ def is_valid_move(game_map, x, y):
     return  game_map.get((x, y)) == '.'
 
 
-
+def check_collisions(game_map, x, y):
+    if (x, y) in game_map:
+        # Há uma colisão com um obstáculo
+        return True
+    return False
 #==========================================================================================
 
 
@@ -171,18 +176,28 @@ id_ator = 0
 pos_ator=( position+ 138, posicao_y )
 
 
+#aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+enemy_x = 100  # Posição inicial do inimigo no eixo X
+enemy_y = 300  # Posição do inimigo no eixo Y (ajuste conforme necessário)
+enemy_speed = 2  # Velocidade do inimigo (ajuste conforme necessário)
+move_right = True  # Indica se o inimigo está se movendo para a direita
+
+
 
 
 
 posicoes_x = []
 posicoes_y = []
 
+pos_bg = 0 
+screen_teste = screen
+inimigo = Inimigo(450, 188, 2)
 while run:
 
   screen.fill( dia )
 
   
-
+    # ...
 
   clock.tick(FPS)
   if debug:
@@ -193,18 +208,25 @@ while run:
       terreno_00( position, tiles, pos_y )
 #      fundo( screen, cor_piso, bg_rect, DIM_SCREEN, pos_y )    # mesma cor do terreno
       show_persona( screen, pos_ator, id_ator, direcao )
+      #show_inimigo(screen,(400,232), 1)
+    
 #      id_ator = 0
-   
+     # ...
+
+ 
 
 
   #scroll background
-  if direcao == 'esquerda':
-        position += velocity
-  if direcao == 'direita':
-        position -= velocity
+  if direcao == 'esquerda' and  (is_valid_move(game_map, position,pos_ator[1]) or is_valid_move(game_map,position + velocity,pos_ator[1])):
+      position += velocity
+  if direcao == 'direita' and  (is_valid_move(game_map, position,pos_ator[1]) or is_valid_move(game_map,position - velocity,pos_ator[1])):
+      position -= velocity
       
   print("Debug da posicao")
-  print(position)
+  print(position + 383)
+ 
+  inimigo.update()
+  inimigo.draw(screen_teste)
 
     
 
@@ -214,6 +236,14 @@ while run:
     position = 0
 
   keys = pygame.key.get_pressed()  # checking pressed keys
+      #testeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+  if keys[pygame.K_SPACE] and keys[pygame.K_RIGHT]:
+            if not pulando:
+                print("puladndooo para direita esse")
+                cima = 0
+                desce = -1
+                pulando = True
+                position -=30
   if keys[ pygame.K_RIGHT ]:
             print('dIREITA.................')
             id_ator = id_ator + 1
@@ -226,18 +256,11 @@ while run:
     if not pulando:
       print("puladndooo")
       pulando = True
-      velocidade_y = -altura_pulo  # Inicie o pulo com uma velocidade negativa
-      posicao_y += velocidade_y
-      velocidade_y += gravidade
-      id_ator = 8
-      pos_ator=( pos_ator[0], posicao_y)
-    else:
+      cima = 0
+      desce = - 1
+    if keys[pygame.K_SPACE] == 0 :
       # Se a tecla de espaço não estiver pressionada, interrompa o pulo
       pulando = False
-      posicao_y = 232
-      id_ator = 0
-      pos_ator=( pos_ator[0], posicao_y)
-
   if keys[pygame.K_RETURN]:
     if event.key == pygame.K_RETURN:
             if not atacando:
@@ -249,16 +272,7 @@ while run:
                 atacando = False
                 id_ator = 9
 
-      #testeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
-  if keys[pygame.K_SPACE] and keys[pygame.K_RIGHT]:
-            if not pulando:
-                print("puladndooo para direita")
-                velocidade_y = -altura_pulo  # Inicie o pulo com uma velocidade negativa
-                posicao_y += velocidade_y
-                velocidade_y += gravidade
-                # Se a tecla de espaço não estiver pressionada, interrompa o pulo
-                pulando = False
-                pos_ator=( pos_ator[0] + 2, posicao_y)
+  
  
   ## event handler
   for event in pygame.event.get():
@@ -274,8 +288,8 @@ while run:
         if event.key == pygame.K_RETURN:
             if not atacando:
                 print("Atacandooo")
-                id_ator = 7
                 atacando = True
+                id_ator = 7
                 pos_ator=( pos_ator[0], pos_ator[1])
             else:
                 atacando = False
@@ -285,16 +299,10 @@ while run:
             if not pulando:
              print("Pular")
              pulando = True
-             velocidade_y = -altura_pulo  # Inicie o pulo com uma velocidade negativa
-            
-             id_ator = 8
-             pos_ator=( pos_ator[0], posicao_y)
-            else:
-            # Se a tecla de espaço não estiver pressionada, interrompa o pulo
-             pulando = False
-             posicao_y = 232
-             id_ator = 0
-             pos_ator=( pos_ator[0], posicao_y)
+             cima = 0
+             desce = - 1
+        if event.key == 0:
+            pulando = False
         if event.key == pygame.K_LEFT:
              
              direcao = 'esquerda'
@@ -305,6 +313,10 @@ while run:
             direcao = 'direita'
             id_ator = id_ator + 1
             print("INDOOooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooO")
+        
+        if event.key == pygame.K_SPACE and event.key == pygame.K_RIGHT:
+             print("puladndooo para direita")
+
 
     if event.type ==pygame.KEYUP:
         if event.key == pygame.K_DOWN:
@@ -319,16 +331,27 @@ while run:
             act_terr = False
             id_ator = 0
         #id_ator = 0
+
     
     if pulando:
-         posicao_y += velocidade_y
-         velocidade_y += gravidade
+        pos_aux = pos_ator[1]
+        if cima >= 0:
+            cima += 2 
+            pos_aux -= cima
+            id_ator = 8
+            pos_ator = (pos_ator[0],pos_aux)
+        if cima >= 6:
+            cima = -1
+            desce = 0
+        if desce >= 0 :
+            desce += 2
+            pos_aux += desce
+            
+            pos_ator = (pos_ator[0],pos_aux)
+        if desce >= 6 :
+            id_ator = 0
+            pulando = False
 
-         if(position, posicao_y) in game_map:
-             posicao_y = posicao_y - (posicao_y%10)
-             velocidade_y = 0
-             pulando = False
-             print("ta funcionando")
 
   print( 'ID', id_ator )
  
@@ -342,7 +365,8 @@ while run:
 #print( 'ID', id_ator )
   
 
-
+  
+  
   pygame.display.update()
 #  print( bg_rect[0], bg_rect[1], bg_rect[2], bg_rect[3],'...' )
 pygame.quit()
