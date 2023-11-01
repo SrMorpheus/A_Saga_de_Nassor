@@ -173,7 +173,7 @@ cenario_02 = True
 pos_y = 5   # posicao da imagem do cenario
 
 id_ator = 0
-pos_ator=( position+ 138, posicao_y )
+pos_ator=( position + 138, posicao_y )
 
 
 #aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
@@ -189,10 +189,13 @@ move_right = True  # Indica se o inimigo está se movendo para a direita
 posicoes_x = []
 posicoes_y = []
 
-pos_bg = 0 
+pos_bg = 517
+pos_inimigo = 1067
+inimigo = Inimigo(position + pos_bg, 188, 2)
+inimigo2 = Inimigo( position + pos_inimigo  , 232, 2)
 screen_teste = screen
-inimigo = Inimigo(450, 188, 2)
 while run:
+  
 
   screen.fill( dia )
 
@@ -208,6 +211,7 @@ while run:
       terreno_00( position, tiles, pos_y )
 #      fundo( screen, cor_piso, bg_rect, DIM_SCREEN, pos_y )    # mesma cor do terreno
       show_persona( screen, pos_ator, id_ator, direcao )
+      
       #show_inimigo(screen,(400,232), 1)
     
 #      id_ator = 0
@@ -222,11 +226,14 @@ while run:
   if direcao == 'direita' and  (is_valid_move(game_map, position,pos_ator[1]) or is_valid_move(game_map,position - velocity,pos_ator[1])):
       position -= velocity
       
-  print("Debug da posicao")
-  print(position + 383)
- 
-  inimigo.update()
+ #inimigos
+  inimigo.update(position + pos_bg)
   inimigo.draw(screen_teste)
+  inimigo2.update(position + pos_inimigo )
+  inimigo2.draw(screen_teste)
+ 
+
+ 
 
     
 
@@ -359,14 +366,9 @@ while run:
   if id_ator == 6 : id_ator = 0 #mexe aqui qualquer coisa sobre ataque
   if id_ator < 0 : id_ator = 6
   
- 
- 
-  
 #print( 'ID', id_ator )
   
 
-  
-  
   pygame.display.update()
 #  print( bg_rect[0], bg_rect[1], bg_rect[2], bg_rect[3],'...' )
 pygame.quit()

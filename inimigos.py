@@ -54,20 +54,25 @@ class Inimigo:
         self.ataque_frames = personagem_ataque
         self.current_ataque = 0
         self.current_frame = 0
-        self.animation_speed = 0.8  # Velocidade da animação
+        self.animation_speed = 0.9  # Velocidade da animação
+        self.controle = 0
 
-    def update(self):
+    def update(self,position ):
+        
         if not self.atacando:
         # Lógica de movimento normal
-            self.x += self.direction * self.speed
-            
-           
+            self.controle += self.direction * self.speed
+            self.x = self.controle + position
+            print("debuf teste")
+            print(self.posicao_fixa_x)
+            print(self.x)
 
+           
         # Lógica para alternar a direção quando atinge os limites
-            if self.direction == 1 and self.x >= 500:
+            if  self.direction == 1 and self.x >=  (position + 50 ):
                 self.atacando = True
                 self.direction = -1
-            elif self.direction == -1 and self.x <= 400:
+            elif self.direction == -1 and self.x <=  (position - 50):
                 self.atacando = True
                 self.direction = 1
 
