@@ -61,12 +61,12 @@ for i in range(4):  ###
 bg_width = bg_images[0].get_width()   # dimensao do fundo
 bg_rect = bg_images[0].get_rect()     # area de fundo
 
-
 ## para imagens que terao mudanca de movimentacao
 ##  eh preciso add mais fatias de imagens
-def terreno_00( position, tiles, pos_y ):
+def terreno_00( position, tiles, pos_y ,pode_subir,caindo):
     for index, img in enumerate( reversed( bg_images ) ):
         veloc = 1
+        
         ## add mais fatias para o paralaxe
         if index < 1:
             tiles += 3
@@ -74,9 +74,15 @@ def terreno_00( position, tiles, pos_y ):
             if index == 0: veloc += 0.3     # mais distante, maior velocidade
             if index == 1: veloc += 0.1
             new_pos_x = i*bg_width + ( position*veloc )
+            new_pos_y = pos_y
 
             if new_pos_x > SCREEN_WIDTH:
                 new_pos_x = -bg_width + ( position*veloc )
+               # Verifique se o personagem pode subir
+            if pode_subir and i == 1:  # Adapte isso conforme necessário
+                new_pos_y -= 5
+            if caindo:
+                new_pos_y += 5
 
             screen.blit( img, (new_pos_x, pos_y ) )
 
@@ -175,25 +181,18 @@ pos_y = 5   # posicao da imagem do cenario
 id_ator = 0
 pos_ator=( position + 138, posicao_y )
 
+## musica
 
-#aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-enemy_x = 100  # Posição inicial do inimigo no eixo X
-enemy_y = 300  # Posição do inimigo no eixo Y (ajuste conforme necessário)
-enemy_speed = 2  # Velocidade do inimigo (ajuste conforme necessário)
-move_right = True  # Indica se o inimigo está se movendo para a direita
-
-
-
-
-
-posicoes_x = []
-posicoes_y = []
+pygame.mixer.music.load('./musicas/nassor_v2.wav')
+pygame.mixer.music.play(-1)
 
 pos_bg = 517
 pos_inimigo = 1067
 inimigo = Inimigo(position + pos_bg, 188, 2)
 inimigo2 = Inimigo( position + pos_inimigo  , 232, 2)
 screen_teste = screen
+pode_subir = False
+caindo = False
 while run:
   
 
@@ -208,10 +207,11 @@ while run:
 
   if cenario_02 == True:
       #for index, img in enumerate( reversed( bg_images ) ):
-      terreno_00( position, tiles, pos_y )
+      terreno_00( position, tiles, pos_y,pode_subir, caindo)
 #      fundo( screen, cor_piso, bg_rect, DIM_SCREEN, pos_y )    # mesma cor do terreno
       show_persona( screen, pos_ator, id_ator, direcao )
       
+     
       #show_inimigo(screen,(400,232), 1)
     
 #      id_ator = 0
@@ -225,6 +225,7 @@ while run:
       position += velocity
   if direcao == 'direita' and  (is_valid_move(game_map, position,pos_ator[1]) or is_valid_move(game_map,position - velocity,pos_ator[1])):
       position -= velocity
+      pode_subir = True
       
  #inimigos
   inimigo.update(position + pos_bg)
@@ -320,7 +321,12 @@ while run:
             direcao = 'direita'
             id_ator = id_ator + 1
             print("INDOOooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooO")
-        
+        if event.key == pygame.K_UP:
+            if pode_subir:  # Adapte isso com base na lógica do seu jogo
+                pos_ator = (pos_ator[0], pos_ator[1] - 5)
+        if event.key == pygame.K_s:
+            caindo = True
+            pos_ator = (pos_ator[0], pos_ator[1] + 5)
         if event.key == pygame.K_SPACE and event.key == pygame.K_RIGHT:
              print("puladndooo para direita")
 
