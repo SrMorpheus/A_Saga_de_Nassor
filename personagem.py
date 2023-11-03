@@ -17,7 +17,8 @@
 #   - Movimentacao para baixo
 
 
-
+from inimigos import *
+import math
 import pygame
 dir = './img/personagens/principal/'
 DEBUG = 1
@@ -52,4 +53,22 @@ def show_persona( screen, pos, id_pers, direcao ):
 
 
 
+class Personagem:
+    def __init__(self, x, y, poder_ataque):
+        self.x = x
+        self.y = y
+        self.poder_ataque = poder_ataque  # Poder de ataque do personagem
+        # Outros atributos do personagem...
+    def atacar(self, inimigo, limite_ataque):
+        distancia = self.calcular_distancia_entre_personagem_e_inimigo(inimigo)
+        print("rolando")
+        print(distancia)
+        if distancia <= limite_ataque:
+            inimigo.sofrer_dano(self.poder_ataque)
+            print("rolando aqui")
 
+    def calcular_distancia_entre_personagem_e_inimigo(self, inimigo):
+        dx = inimigo.x + self.x  # Substitua pelo atributo de posição do personagem
+        dy = inimigo.y + self.y  # Substitua pelo atributo de posição do personagem
+        distancia = math.sqrt(dx ** 2 + dy ** 2)
+        return distancia

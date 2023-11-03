@@ -106,7 +106,7 @@ def load_map(file_path):
             elements = line.strip().split(",")
             if len(elements) == 2:
                 x, y = map(int, elements)
-                game_map[(-x, y - 104)] = "."
+                game_map[(x, y )] = "."
     return game_map;
 
 # função para salvar o arquivo de mapeamento
@@ -188,11 +188,14 @@ pygame.mixer.music.play(-1)
 
 pos_bg = 517
 pos_inimigo = 1067
-inimigo = Inimigo(position + pos_bg, 188, 2)
-inimigo2 = Inimigo( position + pos_inimigo  , 232, 2)
+inimigo = Inimigo(position + pos_bg, 188, 2,6)
+inimigo2 = Inimigo( position + pos_inimigo  , 232, 2,6)
+personagem = Personagem(position + 138, posicao_y, 2)
 screen_teste = screen
 pode_subir = False
 caindo = False
+on_platform = False
+
 while run:
   
 
@@ -227,16 +230,19 @@ while run:
       position -= velocity
       pode_subir = True
       
+  if position == -267:  # Altura da plataforma (ajuste conforme necessário)
+    on_platform = True
+
+  print("Debug de posicao:")
+  print(position)
  #inimigos
+  personagem.x = position
+  personagem.y = pos_ator[1]
+
   inimigo.update(position + pos_bg)
   inimigo.draw(screen_teste)
   inimigo2.update(position + pos_inimigo )
   inimigo2.draw(screen_teste)
- 
-
- 
-
-    
 
   #reset scroll
   if abs( position ) > bg_width:
@@ -266,6 +272,7 @@ while run:
       pulando = True
       cima = 0
       desce = - 1
+      pos_ator = (pos_ator[0], pos_ator[1] - 11)
     if keys[pygame.K_SPACE] == 0 :
       # Se a tecla de espaço não estiver pressionada, interrompa o pulo
       pulando = False
@@ -276,6 +283,7 @@ while run:
                 id_ator = 7
                 atacando = True
                 pos_ator=( pos_ator[0], pos_ator[1])
+                personagem.atacar(inimigo,450)
             else:
                 atacando = False
                 id_ator = 9
@@ -299,6 +307,7 @@ while run:
                 atacando = True
                 id_ator = 7
                 pos_ator=( pos_ator[0], pos_ator[1])
+                personagem.atacar(inimigo,450)
             else:
                 atacando = False
                 id_ator = 9
@@ -309,6 +318,7 @@ while run:
              pulando = True
              cima = 0
              desce = - 1
+             
         if event.key == 0:
             pulando = False
         if event.key == pygame.K_LEFT:
@@ -321,12 +331,13 @@ while run:
             direcao = 'direita'
             id_ator = id_ator + 1
             print("INDOOooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooO")
-        if event.key == pygame.K_UP:
-            if pode_subir:  # Adapte isso com base na lógica do seu jogo
-                pos_ator = (pos_ator[0], pos_ator[1] - 5)
-        if event.key == pygame.K_s:
-            caindo = True
-            pos_ator = (pos_ator[0], pos_ator[1] + 5)
+        if on_platform:
+                if event.key == pygame.K_UP:
+                    if pode_subir:  # Adapte isso com base na lógica do seu jogo
+                        pos_ator = (pos_ator[0], pos_ator[1] - 4)
+                if event.key == pygame.K_s:
+                        caindo = True
+                        pos_ator = (pos_ator[0], pos_ator[1] + 11)
         if event.key == pygame.K_SPACE and event.key == pygame.K_RIGHT:
              print("puladndooo para direita")
 
@@ -353,7 +364,7 @@ while run:
             pos_aux -= cima
             id_ator = 8
             pos_ator = (pos_ator[0],pos_aux)
-        if cima >= 6:
+        if cima >= 4:
             cima = -1
             desce = 0
         if desce >= 0 :
@@ -361,7 +372,7 @@ while run:
             pos_aux += desce
             
             pos_ator = (pos_ator[0],pos_aux)
-        if desce >= 6 :
+        if desce >= 4 :
             id_ator = 0
             pulando = False
 

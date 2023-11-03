@@ -43,7 +43,7 @@ def show_inimigo( screen, pos, id_pers,direcao ):
 
 
 class Inimigo:
-    def __init__(self, x, y, speed):
+    def __init__(self, x, y, speed,vida):
         self.x = x
         self.y = y
         self.atacando = False
@@ -56,6 +56,8 @@ class Inimigo:
         self.current_frame = 0
         self.animation_speed = 0.9  # Velocidade da animação
         self.controle = 0
+        self.vida = vida
+        self.sumindo = False
 
     def update(self,position ):
         
@@ -88,16 +90,22 @@ class Inimigo:
                 self.atacando = False
 
     def draw(self, screen):
-        if not self.atacando:
+        if not self.sumindo:
+            if not self.atacando:
         # Desenhe o inimigo na tela com base na animação de andar atual
-            if self.direction == 1:
-                screen.blit(self.animation_frames[int(self.current_frame)], (self.x, self.y))
+                if self.direction == 1:
+                    screen.blit(self.animation_frames[int(self.current_frame)], (self.x, self.y))
+                else:
+                    screen.blit(personagem_left[int(self.current_frame)], (self.x, self.y))
             else:
-                screen.blit(personagem_left[int(self.current_frame)], (self.x, self.y))
-        else:
         # Desenhe o inimigo na tela com base na animação de ataque atual
-            if self.direction == -1:
-                screen.blit(self.ataque_frames[int(self.current_ataque)], (self.x, self.y))
-            else:
-                screen.blit(personagem_ataque_left[int(self.current_ataque)], (self.x, self.y))
+                if self.direction == -1:
+                    screen.blit(self.ataque_frames[int(self.current_ataque)], (self.x, self.y))
+                else:
+                    screen.blit(personagem_ataque_left[int(self.current_ataque)], (self.x, self.y))
 
+    def sofrer_dano(self, poder_ataque_personagem):
+        self.vida -= poder_ataque_personagem
+        if self.vida <= 0:
+            self.vida = 0
+            self.sumindo = True
