@@ -61,6 +61,22 @@ for i in range(4):  ###
 bg_width = bg_images[0].get_width()   # dimensao do fundo
 bg_rect = bg_images[0].get_rect()     # area de fundo
 
+preto = (0, 0, 0)
+branco = (255, 255, 255)
+
+# Função para mostrar a tela de "Game Over"
+def mostrar_tela_game_over(position, tiles, pos_y ,pode_subir,caindo):
+    screen.fill(dia)  # Preenche a tela com a cor de fundo
+    imagem = pygame.image.load("./img/cenario/gamer_over.png")
+
+    # Adicione elementos gráficos, como texto e imagens, para criar a tela de "Game Over"
+    
+    posicao_imagem = imagem.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+    terreno_00( position, tiles, pos_y ,pode_subir,caindo)
+    screen.blit(imagem, posicao_imagem)
+    pygame.display.flip()
+
+
 ## para imagens que terao mudanca de movimentacao
 ##  eh preciso add mais fatias de imagens
 def terreno_00( position, tiles, pos_y ,pode_subir,caindo):
@@ -133,8 +149,21 @@ def check_collisions(game_map, x, y):
         return True
     return False
 #==========================================================================================
+vermelho = (255, 0, 0)  # Cor vermelha: (R, G, B) = (255, 0, 0)
 
+fonte = pygame.font.Font(None, 36)
+# Função para mostrar os atributos do personagem no canto da tela
+def mostrar_atributos(poder_ataque,vida):
+   
+   texto_poder_ataque = fonte.render(f"Poder de Ataque: {poder_ataque}", True, branco)
+   texto_vida = fonte.render(f"Vida: {vida}", True, vermelho)
+    
+    # Posições para exibir o texto no canto superior esquerdo
+   posicao_poder_ataque = (10, 60)
+   posicao_vida = (10, 100)
 
+   screen.blit(texto_poder_ataque, posicao_poder_ataque)
+   screen.blit(texto_vida, posicao_vida)
 
 pos_bg = (0,0)
 
@@ -188,9 +217,9 @@ pygame.mixer.music.play(-1)
 
 pos_bg = 517
 pos_inimigo = 1067
-inimigo = Inimigo(position + pos_bg, 188, 2,10)
-inimigo2 = Inimigo( position + pos_inimigo  , 232, 2,10)
-personagem = Personagem(position + 138, posicao_y, 2)
+inimigo = Inimigo(position + pos_bg, 188, 2,10,1)
+inimigo2 = Inimigo( position + pos_inimigo  , 232, 2,10,1)
+personagem = Personagem(position + 138, posicao_y,3, 2)
 screen_teste = screen
 pode_subir = False
 caindo = False
@@ -220,7 +249,6 @@ while run:
 #      id_ator = 0
      # ...
 
- 
 
 
   #scroll background
@@ -235,13 +263,15 @@ while run:
 
   print("Debug de posicao:")
   print(position)
+
+  mostrar_atributos(personagem.poder_ataque,personagem.vida)
  #inimigos
   personagem.x = position
   personagem.y = pos_ator[1]
 
-  inimigo.update(position + pos_bg)
+  inimigo.update(position + pos_bg, personagem)
   inimigo.draw(screen_teste)
-  inimigo2.update(position + pos_inimigo )
+  inimigo2.update(position + pos_inimigo, personagem )
   inimigo2.draw(screen_teste)
 
   #reset scroll
@@ -386,10 +416,17 @@ while run:
   if id_ator > 9: id_ator = 0 #mexe aqui qualquer para outras versoes +
   if id_ator == 6 : id_ator = 0 #mexe aqui qualquer coisa sobre ataque
   if id_ator < 0 : id_ator = 6
-  
-#print( 'ID', id_ator )
-  
 
+  if personagem.morto:
+      run = False
+
+#print( 'ID', id_ator )
   pygame.display.update()
+
+mostrar_tela_game_over(position,tiles,pos_y,False,False)
+while True:
+    for evento in pygame.event.get():
+        if evento.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
 #  print( bg_rect[0], bg_rect[1], bg_rect[2], bg_rect[3],'...' )
-pygame.quit()

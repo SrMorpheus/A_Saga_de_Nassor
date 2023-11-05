@@ -54,10 +54,12 @@ def show_persona( screen, pos, id_pers, direcao ):
 
 
 class Personagem:
-    def __init__(self, x, y, poder_ataque):
+    def __init__(self, x, y, vida, poder_ataque):
         self.x = x
         self.y = y
         self.poder_ataque = poder_ataque  # Poder de ataque do personagem
+        self.vida = vida
+        self.morto = False
         # Outros atributos do personagem...
     def atacar(self, inimigo, limite_ataque):
         distancia = self.calcular_distancia_entre_personagem_e_inimigo(inimigo)
@@ -73,3 +75,8 @@ class Personagem:
        #distancia = math.sqrt(dx ** 2 + dy ** 2)
         distancia = dx
         return distancia
+    def sofrer_dano(self, poder_ataque_inimigo):
+        self.vida -= poder_ataque_inimigo
+        if self.vida <= 0:
+            self.vida = 0
+            self.morto = True

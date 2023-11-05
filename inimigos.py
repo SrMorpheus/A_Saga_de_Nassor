@@ -1,4 +1,5 @@
 import pygame
+from personagem import *
 dir = './img/personagens/inimigo/'
 dir_ataque = './img/personagens/inimigo/atacando/'
 dir_morto = './img/personagens/inimigo/morte/'
@@ -53,9 +54,10 @@ def show_inimigo( screen, pos, id_pers,direcao ):
 
 
 class Inimigo:
-    def __init__(self, x, y, speed,vida):
+    def __init__(self, x, y, speed,vida,poder):
         self.x = x
         self.y = y
+        self.poder_ataque = poder
         self.atacando = False
         self.posicao_fixa_x = x          
         self.speed = speed
@@ -70,7 +72,7 @@ class Inimigo:
         self.vida = vida
         self.sumindo = False
 
-    def update(self,position ):
+    def update(self,position,personagem ):
         
         if not self.sumindo:
             if not self.atacando:
@@ -100,6 +102,7 @@ class Inimigo:
                 self.current_ataque += 0.8  # Ajuste a velocidade da animação de ataque
                 if self.current_ataque >= len(self.ataque_frames):
                     self.current_ataque = 0
+                    self.atacar(personagem)
                     self.atacando = False
         else:
             self.x = position
@@ -128,3 +131,14 @@ class Inimigo:
         if self.vida <= 0:
             self.vida = 0
             self.sumindo = True
+    def atacar(self, personagem ):
+        distancia = self.calcular_distancia_entre_personagem_e_inimigo(personagem)
+        if distancia <= -140:
+            personagem.sofrer_dano(self.poder_ataque)
+
+    def calcular_distancia_entre_personagem_e_inimigo(self, personagem):
+        dx = personagem.x + self.x  # Substitua pelo atributo de posição do personagem
+        dy = personagem.y + self.y  # Substitua pelo atributo de posição do personagem
+       #distancia = math.sqrt(dx ** 2 + dy ** 2)
+        distancia = dx
+        return distancia
