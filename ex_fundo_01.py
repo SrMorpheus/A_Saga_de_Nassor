@@ -188,8 +188,8 @@ pygame.mixer.music.play(-1)
 
 pos_bg = 517
 pos_inimigo = 1067
-inimigo = Inimigo(position + pos_bg, 188, 2,6)
-inimigo2 = Inimigo( position + pos_inimigo  , 232, 2,6)
+inimigo = Inimigo(position + pos_bg, 188, 2,10)
+inimigo2 = Inimigo( position + pos_inimigo  , 232, 2,10)
 personagem = Personagem(position + 138, posicao_y, 2)
 screen_teste = screen
 pode_subir = False
@@ -283,7 +283,9 @@ while run:
                 id_ator = 7
                 atacando = True
                 pos_ator=( pos_ator[0], pos_ator[1])
-                personagem.atacar(inimigo,450)
+                personagem.atacar(inimigo,-170)
+                personagem.atacar(inimigo2,-170)
+
             else:
                 atacando = False
                 id_ator = 9
@@ -307,7 +309,9 @@ while run:
                 atacando = True
                 id_ator = 7
                 pos_ator=( pos_ator[0], pos_ator[1])
-                personagem.atacar(inimigo,450)
+                personagem.atacar(inimigo,-170)
+                personagem.atacar(inimigo2,-170)
+
             else:
                 atacando = False
                 id_ator = 9
@@ -334,8 +338,8 @@ while run:
         if on_platform:
                 if event.key == pygame.K_UP:
                     if pode_subir:  # Adapte isso com base na lógica do seu jogo
-                        pos_ator = (pos_ator[0], pos_ator[1] - 4)
-                if event.key == pygame.K_s:
+                        pos_ator = (pos_ator[0], pos_ator[1] - 11)
+                if event.key == pygame.K_DOWN:
                         caindo = True
                         pos_ator = (pos_ator[0], pos_ator[1] + 11)
         if event.key == pygame.K_SPACE and event.key == pygame.K_RIGHT:

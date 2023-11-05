@@ -70,5 +70,6 @@ class Personagem:
     def calcular_distancia_entre_personagem_e_inimigo(self, inimigo):
         dx = inimigo.x + self.x  # Substitua pelo atributo de posição do personagem
         dy = inimigo.y + self.y  # Substitua pelo atributo de posição do personagem
-        distancia = math.sqrt(dx ** 2 + dy ** 2)
+       #distancia = math.sqrt(dx ** 2 + dy ** 2)
+        distancia = dx
         return distancia
